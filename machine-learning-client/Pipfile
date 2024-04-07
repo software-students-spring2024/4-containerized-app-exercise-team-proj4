@@ -6,6 +6,11 @@ name = "pypi"
 [packages]
 pylint = "*"
 black = "*"
+flask = "*"
+flask-cors = "*"
+speechrecognition = "*"
+pymongo = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
