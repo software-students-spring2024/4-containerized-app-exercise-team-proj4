@@ -70,7 +70,9 @@ def get_transcriptions():
     """
     Get all transcribed texts.
     """
-    transcriptions = list(audio_collection.find({}, {"_id": 0, "text": 1}))
+    transcriptions = list(audio_collection.find({}, {"text": 1}))
+    for transcription in transcriptions:
+        transcription["_id"] = str(transcription["_id"])
     return jsonify(transcriptions), 200
 
 

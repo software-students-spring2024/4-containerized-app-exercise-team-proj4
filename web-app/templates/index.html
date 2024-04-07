@@ -72,6 +72,7 @@
                 });
         }
 
+
         function deleteTranscription(id) {
             fetch(`http://localhost:3001/delete_transcription/${id}`, { method: "DELETE" })
                 .then(response => {
