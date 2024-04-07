@@ -11,6 +11,7 @@ flask-cors = "*"
 speechrecognition = "*"
 pymongo = "*"
 python-dotenv = "*"
+typing-extensions = "*"
 
 [dev-packages]
 
