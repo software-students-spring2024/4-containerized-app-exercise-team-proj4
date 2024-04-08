@@ -1,0 +1,22 @@
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# First, copy only the requirements.txt file and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Now, copy the rest of the web-app's files into the container
+COPY web-app/ .
+
+# Set environment variables from your .env file (if needed, or use docker-compose)
+# ENV MONGO_URI=mongodb://mongodb:27017/
+# ENV MONGO_DBNAME=speech_to_text_db
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Command to run the app
+CMD ["python", "app.py"]

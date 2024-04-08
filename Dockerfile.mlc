@@ -1,0 +1,27 @@
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Install any system dependencies
+RUN apt-get update && \
+    apt-get install -y libgl1-mesa-glx libglib2.0-0 ffmpeg flac && \
+    rm -rf /var/lib/apt/lists/*
+
+# First, copy only the requirements.txt file and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Now, copy the rest of the machine-learning-client's files into the container
+COPY machine-learning-client/ .
+
+# Set environment variables from your .env file (if needed, or use docker-compose)
+# ENV MONGO_URI=mongodb://mongodb:27017/
+# ENV MONGO_DBNAME=speech_to_text_db
+
+# Expose the port the app runs on
+EXPOSE 3001
+
+# Command to run the app
+CMD ["python", "app.py"]
