@@ -8,6 +8,8 @@ pylint = "*"
 black = "*"
 flask = "*"
 typing-extensions = "*"
+pytest = "*"
+pytest-flask = "*"
 
 [dev-packages]
 
