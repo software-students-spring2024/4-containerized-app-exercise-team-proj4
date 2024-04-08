@@ -12,6 +12,8 @@ speechrecognition = "*"
 pymongo = "*"
 python-dotenv = "*"
 typing-extensions = "*"
+pytest = "*"
+pytest-flask = "*"
 
 [dev-packages]
 
