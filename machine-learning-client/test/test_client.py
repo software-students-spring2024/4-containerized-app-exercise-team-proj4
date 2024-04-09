@@ -2,6 +2,7 @@ import os
 import tempfile
 import pytest
 import json
+import io
 from app import app
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -32,6 +33,10 @@ class TestClient:
         actual = True  
         assert actual == expected, "Expected True to be equal to True!"
 
+
+    def post(self, url, data=None):
+        return self.app.post(url, data=data)
+
     def test_get_transcriptions(self, client, test_app):
         response = client.get("/transcriptions")
         assert response.status_code == 200
@@ -44,7 +49,19 @@ class TestClient:
         response = client.delete(f"/delete_transcription/{non_existent_id}")
         assert response.status_code == 404
         assert response.json == {"error": "Not found"}
+    
+    def test_transcribe_audio_no_file(self, client):
+        response = client.post("/transcribe")
+        assert response.status_code == 400
+        assert response.json == {"error": "No file part"}
 
+    def test_transcribe_audio_empty_file(self, client):
+        data = {"file": (io.BytesIO(b""), "")}
+        response = client.post("/transcribe", data=data)
+        assert response.status_code == 400
+        assert response.json == {"error": "No selected file"}
+    
+    
    
     
 if __name__ == "__main__":
