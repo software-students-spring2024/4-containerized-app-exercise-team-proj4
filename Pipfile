@@ -4,16 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pylint = "*"
-black = "*"
 flask = "*"
-flask-cors = "*"
 speechrecognition = "*"
+pyaudio = "*"
+flask-cors = "*"
 pymongo = "*"
 python-dotenv = "*"
-typing-extensions = "*"
+pylint = "*"
+black = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.9"

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Speech to Text</title>
+</head>
+<body>
+    <h1>Speak Now</h1>
+    <button id="recordButton">Record</button>
+    <p id="text"></p>
+    <ul id="transcriptions"></ul>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        document.getElementById("recordButton").addEventListener("click", function() {
+            if (isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                this.textContent = "Record";
+            } else {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        mediaRecorder = new MediaRecorder(stream);
+                        mediaRecorder.start();
+                        isRecording = true;
+                        this.textContent = "Stop";
+
+                        audioChunks = [];
+                        mediaRecorder.addEventListener("dataavailable", event => {
+                            audioChunks.push(event.data);
+                        });
+
+                        mediaRecorder.addEventListener("stop", () => {
+                            const audioBlob = new Blob(audioChunks);
+                            const formData = new FormData();
+                            formData.append("file", audioBlob);
+
+                            fetch("http://localhost:3001/transcribe", {
+                                method: "POST",
+                                body: formData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                document.getElementById("text").textContent = data.text;
+                                fetchTranscriptions(); // Fetch and display all transcriptions
+                            })
+                            .catch(error => console.error("Error:", error));
+                        });
+                    })
+                    .catch(error => console.error("Error:", error));
+            }
+        });
+
+        function fetchTranscriptions() {
+            fetch("http://localhost:3001/transcriptions")
+                .then(response => response.json())
+                .then(data => {
+                    const transcriptionsList = document.getElementById("transcriptions");
+                    transcriptionsList.innerHTML = ""; // Clear list
+                    data.forEach(item => {
+                        const li = document.createElement("li");
+                        li.textContent = item.text + " ";
+                        const deleteButton = document.createElement("button");
+                        deleteButton.textContent = "Delete";
+                        deleteButton.onclick = () => deleteTranscription(item._id);
+                        li.appendChild(deleteButton);
+                        transcriptionsList.appendChild(li);
+                    });
+                });
+        }
+
+
+        function deleteTranscription(id) {
+            fetch(`http://localhost:3001/delete_transcription/${id}`, { method: "DELETE" })
+                .then(response => {
+                    if (response.ok) {
+                        fetchTranscriptions(); // Refresh list after delete
+                    }
+                });
+        }
+
+        window.onload = () => {
+            fetchTranscriptions(); // Load transcriptions when the page loads
+        };
+    </script>
+</body>
+</html>
