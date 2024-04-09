@@ -4,6 +4,7 @@ import pytest
 import json
 from app import app
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 
 @pytest.fixture
@@ -14,13 +15,11 @@ def client():
 
 @pytest.fixture
 def test_app():
-    # Use mongomock for MongoDB interactions during testing
-    app.config['MONGO_URI'] = 'mongodb://localhost:27017/mydatabase'
+    app.config['MONGO_URI'] = 'mongodb://localhost:3000/mydatabase'
     client = MongoClient()
     db = client.mydatabase
     app.audio_collection = db.audio_data
     yield app
-
 
 class TestClient:
     def test_sanity_check(self):
@@ -38,7 +37,15 @@ class TestClient:
         assert response.status_code == 200
         response_data = json.loads(response.data)
         assert isinstance(response_data, list)
-    
 
+    
+    def test_delete_transcriptions_error(self, client):
+        non_existent_id = ObjectId()
+        response = client.delete(f"/delete_transcription/{non_existent_id}")
+        assert response.status_code == 404
+        assert response.json == {"error": "Not found"}
+
+   
+    
 if __name__ == "__main__":
     pytest.main()
