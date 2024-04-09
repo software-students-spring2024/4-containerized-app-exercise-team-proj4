@@ -18,9 +18,9 @@ app = Flask(__name__)
 CORS(app)
 
 MONGO_URI = os.getenv("MONGO_URI")
-DB_NAME = os.getenv("DATABASE_NAME")
+DATABASE_NAME = os.getenv("DATABASE_NAME")
 mongo_client = pymongo.MongoClient(MONGO_URI)
-db = mongo_client[DB_NAME]
+db = mongo_client[DATABASE_NAME]
 audio_collection = db["audio_data"]
 
 
@@ -88,4 +88,4 @@ def delete_transcription(transcription_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=3001)
+    app.run(debug=True, host="0.0.0.0", port=3001)

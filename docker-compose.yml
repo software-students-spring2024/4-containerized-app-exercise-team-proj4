@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  machine-learning-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.mlc
+    image: zijiezhao/project4-machine-learning-client:latest
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/
+      - DATABASE_NAME=speech_to_text_db
+    depends_on:
+      - mongodb
+
+  web-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    image: zijiezhao/project4-web-app:latest
+    ports:
+     - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/
+      - DATABASE_NAME=speech_to_text_db
+    depends_on:
+      - mongodb
