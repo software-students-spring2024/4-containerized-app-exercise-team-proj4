@@ -1,0 +1,44 @@
+import os
+import tempfile
+import pytest
+import json
+from app import app
+from pymongo import MongoClient
+
+
+@pytest.fixture
+def client():
+    app.config["TESTING"] = True
+    with app.test_client() as client:
+        yield client
+
+@pytest.fixture
+def test_app():
+    # Use mongomock for MongoDB interactions during testing
+    app.config['MONGO_URI'] = 'mongodb://localhost:27017/mydatabase'
+    client = MongoClient()
+    db = client.mydatabase
+    app.audio_collection = db.audio_data
+    yield app
+
+
+class TestClient:
+    def test_sanity_check(self):
+        """
+        Test debugging... making sure that we can run a simple test that always passes.
+        Note the use of the example_fixture in the parameter list - any setup and teardown in that fixture will be run before and after this test function executes
+        From the main project directory, run the `python3 -m pytest` command to run all tests.
+        """
+        expected = True 
+        actual = True  
+        assert actual == expected, "Expected True to be equal to True!"
+
+    def test_get_transcriptions(self, client, test_app):
+        response = client.get("/transcriptions")
+        assert response.status_code == 200
+        response_data = json.loads(response.data)
+        assert isinstance(response_data, list)
+    
+
+if __name__ == "__main__":
+    pytest.main()
