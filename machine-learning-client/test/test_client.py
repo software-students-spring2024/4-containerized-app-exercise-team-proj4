@@ -61,7 +61,6 @@ class TestClient:
         assert response.status_code == 400
         assert response.json == {"error": "No selected file"}
     
-    
    
     
 if __name__ == "__main__":
