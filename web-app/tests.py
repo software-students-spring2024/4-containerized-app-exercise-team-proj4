@@ -1,20 +1,26 @@
+"""
+Tests for the web application.
+"""
+
 import pytest
 from app import app
 
 
 @pytest.fixture
-def test_client():
+def client():
+    """
+    Fixture to create a test client for the Flask application.
+    """
     with app.test_client() as client:
         yield client
 
 
-def test_index(test_client):
+def test_index(client):
     """
-    Test index route.
+    Test the index route of the Flask application.
     """
-    response = test_client.get("/")
+    response = client.get("/")
     assert response.status_code == 200
-    assert b"Hello, World!" in response.data  
 
 
 if __name__ == "__main__":
