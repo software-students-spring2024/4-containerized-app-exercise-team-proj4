@@ -1,19 +1,5 @@
-ignore:
-  - "C0303"  # Trailing whitespace
-  - "C0304"  # Final newline missing
-  - "C0114"  # Missing module docstring
-  - "C0116"  # Missing function or method docstring
-  - "E0401"  # Unable to import 'pytest'
-  - "W0621"  # Redefining name 'test_client' from outer scope
-
+[MASTER]
+init-hook='import sys; sys.path.append("/path/to/root")'
 [MASTER]
 init-hook="import sys; sys.path.append('./')"
 load-plugins=pytest_pylint
-
-[MESSAGES CONTROL]
-disable=
-    C0304,  # Final newline missing
-    E0401,  # Unable to import 'pytest'
-    W0621,   # Redefining name 'client' from outer scope (line 10) (redefined-outer-name)
-    C0103,  # Variable name "c" doesn't conform to snake_case naming style (invalid-name)
-    C0305 #Trailing newlines
