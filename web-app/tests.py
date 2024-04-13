@@ -1,7 +1,3 @@
-"""
-Tests for the web application.
-"""
-
 import pytest
 from app import app
 
@@ -11,8 +7,8 @@ def client():
     """
     Fixture to create a test client for the Flask application.
     """
-    with app.test_client() as client:
-        yield client
+    with app.test_client() as c:
+        yield c
 
 
 def test_index(client):

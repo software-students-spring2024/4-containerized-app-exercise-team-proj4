@@ -5,3 +5,13 @@ ignore:
   - "C0116"  # Missing function or method docstring
   - "E0401"  # Unable to import 'pytest'
   - "W0621"  # Redefining name 'test_client' from outer scope
+
+[MASTER]
+init-hook="import sys; sys.path.append('./')"
+load-plugins=pytest_pylint
+
+[MESSAGES CONTROL]
+disable=
+    C0304,  # Final newline missing
+    E0401,  # Unable to import 'pytest'
+    W0621   # Redefining name 'client' from outer scope (line 10) (redefined-outer-name)
