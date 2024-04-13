@@ -87,7 +87,5 @@ def delete_transcription(transcription_id):
     return jsonify({"error": "Not found"}), 404
 
 
-
-
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=3001)
