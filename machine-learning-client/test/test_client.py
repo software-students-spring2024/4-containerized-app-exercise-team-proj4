@@ -10,7 +10,7 @@ import tempfile
 from app import app, audio_collection
 import pytest
 from bson import ObjectId
-
+# pylint: disable=W0621,E1101,R1732
 # tmpfile = tempfile.NamedTemporaryFile(suffix=".webm", delete=False)
 # tmpfile.write(b'Mock audio content')
 # wav_file_path = "/var/folders/kl/q0cvh6m12dv7lyf4wfwjc9lr0000gn/T/tmpsb3eznub.webm.wav"
