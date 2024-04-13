@@ -11,8 +11,8 @@ def client():
     """
     Fixture to create a test client for the Flask application.
     """
-    with app.test_client() as c:
-        yield c
+    with app.test_client() as client:
+        yield client
 
 
 def test_index(client):
@@ -26,3 +26,4 @@ def test_index(client):
 if __name__ == "__main__":
     pytest.main()
 
+    
