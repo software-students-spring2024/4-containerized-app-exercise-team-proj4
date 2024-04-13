@@ -7,7 +7,7 @@ from app import app
 
 
 @pytest.fixture
-def client():
+def clienttest():
     """
     Fixture to create a test client for the Flask application.
     """
@@ -25,4 +25,3 @@ def test_index(client):
 
 if __name__ == "__main__":
     pytest.main()
-
