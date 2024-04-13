@@ -1,3 +1,7 @@
+"""
+Module-level docstring describing the purpose of the tests.
+"""
+
 import pytest
 from app import app
 
@@ -21,3 +25,4 @@ def test_index(client):
 
 if __name__ == "__main__":
     pytest.main()
+
