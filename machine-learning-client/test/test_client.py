@@ -2,8 +2,8 @@
 test function class for ML client
 """
 import os
+from io import BytesIO
 import io
-import subprocess
 from unittest.mock import patch, MagicMock
 import json
 import tempfile
@@ -11,16 +11,7 @@ import pytest
 from bson import ObjectId
 from app import app, audio_collection
 
-
-# pylint: disable=W0621,E1101,R1732
-# tmpfile = tempfile.NamedTemporaryFile(suffix=".webm", delete=False)
-# tmpfile.write(b'Mock audio content')
-# wav_file_path = "/var/folders/kl/q0cvh6m12dv7lyf4wfwjc9lr0000gn/T/tmpsb3eznub.webm.wav"
-
-# def setup_mock_exists(mock_exists):
-#     mock_exists.return_value = True
-#     mock_exists.side_effect = lambda x: True if x == wav_file_path else False
-
+# pylint: disable=W0621,E1101,R1732, C0116
 
 @pytest.fixture
 def client():
@@ -39,18 +30,8 @@ def mock_run():
     """
     return MagicMock()
 
-
-# @pytest.fixture
-# def test_app():
-#     """
-#     test_app fixture
-#     """
-#     app.config['MONGO_URI'] = 'mongodb://localhost:3000/mydatabase'
-#     client = MongoClient()
-#     db = client.mydatabase
-#     app.audio_collection = db.audio_data
-#     yield app
-
+def mock_remove():
+    pass
 
 class TestClient:
     """
@@ -117,7 +98,7 @@ class TestClient:
         assert response.json == {"success": True}
 
     @patch("app.subprocess.run")
-    def test_transcribe_audio_success(self, mock_run, mocker, client):
+    def test_transcribe_audio_success(self,monkeypatch, mock_run, mocker, client):
         """
         test transcribe audio sucess
         """
@@ -132,30 +113,18 @@ class TestClient:
         if not os.path.exists(tmpfile.name):
             pytest.skip("Temporary file does not exist. Skipping test.")
 
-        subprocess.run(
-            [
-                "ffmpeg",
-                "-i",
-                tmpfile.name,
-                "-vn",
-                "-ar",
-                "44100",
-                "-ac",
-                "2",
-                "-b:a",
-                "192k",
-                tmpfile.name + ".wav",
-            ],
-            check=True,
-        )
-        wav_filename = tmpfile.name + ".wav"
-        if not os.path.exists(wav_filename):
-            pytest.skip("WAV file does not exist. Skipping test.")
 
-        # issue with response
+        # wav_filename = tmpfile.name + ".wav"
+        # if not os.path.exists(wav_filename):
+        #     pytest.skip("WAV file does not exist. Skipping test.")
+        audio_file = BytesIO(audio_content)
+        audio_file.name = "mock_audio.webm"
+
+        monkeypatch.setattr(os, "remove", mock_remove)
+
         response = client.post(
             "/transcribe",
-            data={"file": (open(tmpfile.name, "rb"), "mock_audio.webm")},
+            data={"file": (audio_file, "mock_audio.webm")},
             content_type="multipart/form-data",
         )
 
