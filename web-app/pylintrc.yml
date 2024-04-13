@@ -1,0 +1,7 @@
+ignore:
+  - "C0303"  # Trailing whitespace
+  - "C0304"  # Final newline missing
+  - "C0114"  # Missing module docstring
+  - "C0116"  # Missing function or method docstring
+  - "E0401"  # Unable to import 'pytest'
+  - "W0621"  # Redefining name 'test_client' from outer scope
