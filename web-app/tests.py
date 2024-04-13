@@ -1,5 +1,5 @@
 """
-Tests for the web application.
+Module-level docstring describing the purpose of the tests.
 """
 
 import pytest
@@ -7,12 +7,12 @@ from app import app
 
 
 @pytest.fixture
-def client():
+def clienttest():
     """
     Fixture to create a test client for the Flask application.
     """
-    with app.test_client() as client:
-        yield client
+    with app.test_client() as the_client:
+        yield the_client
 
 
 def test_index(client):
