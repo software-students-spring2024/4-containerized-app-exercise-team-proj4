@@ -14,5 +14,6 @@ load-plugins=pytest_pylint
 disable=
     C0304,  # Final newline missing
     E0401,  # Unable to import 'pytest'
-    W0621   # Redefining name 'client' from outer scope (line 10) (redefined-outer-name)
+    W0621,   # Redefining name 'client' from outer scope (line 10) (redefined-outer-name)
     C0103,  # Variable name "c" doesn't conform to snake_case naming style (invalid-name)
+    C0305 #Trailing newlines
