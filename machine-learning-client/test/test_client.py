@@ -13,6 +13,7 @@ from app import app, audio_collection
 
 # pylint: disable=W0621,E1101,R1732, C0116
 
+
 @pytest.fixture
 def client():
     """
@@ -30,8 +31,10 @@ def mock_run():
     """
     return MagicMock()
 
+
 def mock_remove():
     pass
+
 
 class TestClient:
     """
@@ -98,7 +101,7 @@ class TestClient:
         assert response.json == {"success": True}
 
     @patch("app.subprocess.run")
-    def test_transcribe_audio_success(self,monkeypatch, mock_run, mocker, client):
+    def test_transcribe_audio_success(self, monkeypatch, mock_run, mocker, client):
         """
         test transcribe audio sucess
         """
@@ -112,7 +115,6 @@ class TestClient:
 
         if not os.path.exists(tmpfile.name):
             pytest.skip("Temporary file does not exist. Skipping test.")
-
 
         # wav_filename = tmpfile.name + ".wav"
         # if not os.path.exists(wav_filename):
