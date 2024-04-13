@@ -1,5 +1,0 @@
-[MASTER]
-init-hook='import sys; sys.path.append("/path/to/root")'
-[MASTER]
-init-hook="import sys; sys.path.append('./')"
-load-plugins=pytest_pylint
