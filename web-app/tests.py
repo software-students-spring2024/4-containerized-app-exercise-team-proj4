@@ -23,4 +23,3 @@ def test_index(client):
 
 if __name__ == "__main__":
     pytest.main()
-
