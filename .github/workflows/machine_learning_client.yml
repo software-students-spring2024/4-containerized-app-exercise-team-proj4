@@ -26,7 +26,6 @@ jobs:
       run: |
         pip install pytest pylint
         pylint **/*.py
-    # - name: Test with pytest
-    #   run: |
-    #    cd machine-learning-client
-    #    pytest tests.py
+    - name: Test with pytest
+      run: |
+        pytest machine-learning-client/test/test_client.py

@@ -26,10 +26,9 @@ jobs:
       run: |
         pip install pylint pytest
         pylint **/*.py
-    # - name: Test with pytest
-    #   run: |
-    #    cd web-app
-    #    pytest tests.py
+    - name: Test with pytest
+      run: |
+        pytest web-app/tests.py
 
   build-and-push:
       needs: build-and-test
