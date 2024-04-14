@@ -27,5 +27,8 @@ jobs:
         pip install pytest pylint
         pylint **/*.py
     - name: Test with pytest
+      env:
+        MONGO_URI: ${{ secrets.MONGO_URI }}
+        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
       run: |
         pytest machine-learning-client/test/test_client.py
