@@ -1,17 +1,15 @@
 """
 test function class for ML client
 """
-import os
 from io import BytesIO
 import io
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, mock_open
 import json
-import tempfile
 import pytest
 from bson import ObjectId
 from app import app, audio_collection
 
-# pylint: disable=W0621,E1101,R1732, C0116
+# pylint: disable=W0621,E1101,R1732, C0116, W0107, W0613, R0913
 
 
 @pytest.fixture
@@ -32,8 +30,19 @@ def mock_run():
     return MagicMock()
 
 
-def mock_remove():
+def mock_remove(filename):
+    """
+    Mock function to replace os.remove, only accepts parameters, does not perform any action.
+    """
     pass
+
+
+@pytest.fixture
+def mock_audio_recognizer():
+    """Fixture to mock speech_recognition Recognizer and AudioFile."""
+    with patch("speech_recognition.AudioFile", MagicMock()) as mock_audio_file:
+        with patch("speech_recognition.Recognizer") as mock_recognizer:
+            yield mock_audio_file, mock_recognizer
 
 
 class TestClient:
@@ -100,29 +109,42 @@ class TestClient:
         assert response.status_code == 200
         assert response.json == {"success": True}
 
-    @patch("app.subprocess.run")
-    def test_transcribe_audio_success(self, monkeypatch, mock_run, mocker, client):
+    @patch("subprocess.run")
+    @patch("tempfile.NamedTemporaryFile")
+    @patch("os.remove")
+    @patch("speech_recognition.AudioFile")
+    @patch("speech_recognition.Recognizer")
+    @patch("builtins.open", new_callable=mock_open)
+    def test_transcribe_audio_success(
+        self,
+        mock_file_open,
+        mock_recognizer,
+        mock_audio_file,
+        mock_remove,
+        mock_tempfile,
+        mock_run,
+        client,
+    ):
         """
-        test transcribe audio sucess
+        Test to ensure audio transcription is successful.
         """
         mock_run.return_value.returncode = 0
-        mocker.patch.object(
-            audio_collection, "insert_one"
-        ).return_value.inserted_id = ObjectId("61012f72421d474a9e65d0d0")
+        mock_tempfile.return_value.__enter__.return_value.name = (
+            "/fakepath/faketemp.webm"
+        )
+
+        recognizer_instance = MagicMock()
+        recognizer_instance.recognize_google.return_value = "Recognized text"
+        mock_recognizer.return_value = recognizer_instance
+        mock_audio_file.return_value.__enter__.return_value = MagicMock()
+
         audio_content = b"Mock audio content"
-        with tempfile.NamedTemporaryFile(suffix=".webm", delete=False) as tmpfile:
-            tmpfile.write(audio_content)
-
-        if not os.path.exists(tmpfile.name):
-            pytest.skip("Temporary file does not exist. Skipping test.")
-
-        # wav_filename = tmpfile.name + ".wav"
-        # if not os.path.exists(wav_filename):
-        #     pytest.skip("WAV file does not exist. Skipping test.")
         audio_file = BytesIO(audio_content)
         audio_file.name = "mock_audio.webm"
 
-        monkeypatch.setattr(os, "remove", mock_remove)
+        mock_insert = MagicMock()
+        mock_insert.return_value.inserted_id = ObjectId()
+        audio_collection.insert_one = mock_insert
 
         response = client.post(
             "/transcribe",
@@ -131,14 +153,13 @@ class TestClient:
         )
 
         assert response.status_code == 200
-        response_data = json.loads(response.data)
-        assert "text" in response_data
+        response_data = response.get_json()
+        assert response_data["text"] == "Recognized text"
         assert "id" in response_data
-
-        transcription_id = response_data["id"]
-        assert (
-            audio_collection.find_one({"_id": ObjectId(transcription_id)}) is not None
-        )
+        assert mock_insert.called  # Ensure database insert was called
+        assert mock_run.called  # Ensure subprocess.run was called
+        # Ensure file open function was called to simulate file writing
+        mock_file_open.assert_called()
 
 
 if __name__ == "__main__":
