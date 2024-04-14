@@ -12,14 +12,15 @@ jobs:
     
     services:
       mongodb:
-        image: mongo
+        image: mongo:4.4-bionic  
         ports:
           - 27017:27017
         options: >-
-          --health-cmd "mongo --eval 'db.runCommand({ping: 1})'"
-          --health-interval 15s
-          --health-timeout 10s
-          --health-retries 10
+          --health-cmd "mongo --eval 'db.adminCommand({ping: 1})'"
+          --health-start-period 30s
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
           -e GITHUB_ACTIONS=true
           -e CI=true
 
