@@ -5,6 +5,7 @@ Module-level docstring describing the purpose of the tests.
 import pytest
 from app import app
 
+# pylint: disable=redefined-outer-name
 @pytest.fixture
 def client():
     """
