@@ -36,6 +36,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pip install pytest-mock
     - name: Lint with Pylint
       run: |
         pip install pytest pylint
