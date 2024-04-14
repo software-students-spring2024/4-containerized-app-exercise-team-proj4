@@ -15,11 +15,11 @@ jobs:
         image: mongo
         ports:
           - 27017:27017
-    options: |
-      --health-cmd "mongo --eval 'db.runCommand({ping: 1})'" \
-      --health-interval 15s \
-      --health-timeout 10s \
-      --health-retries 10
+        options: |
+          --health-cmd "mongo --eval 'db.runCommand({ping: 1})'" \
+          --health-interval 15s \
+          --health-timeout 10s \
+          --health-retries 10
 
     steps:
     - uses: actions/checkout@v2
