@@ -32,3 +32,10 @@ To run the project, you should do as following:
 * Click on the **record** button and allow the access to your microphone to record your voice!
 
 If you want to pull from Docker Hub: ```docker pull zijiezhao/project4-web-app```
+
+## Teammates
+
+- Zijie Zhao ([github](https://github.com/ZijieZha0))
+- Joyce Xie([github](https://github.com/joyxe-xie))
+- Nathan Daniel ([github](https://github.com/WayyGood))
+- Kevin Li ([github](https://github.com/Kevinli712390))
